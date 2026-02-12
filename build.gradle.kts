@@ -1,3 +1,5 @@
+import org.gradle.api.plugins.JavaPluginExtension
+
 allprojects {
     repositories {
         mavenCentral()
@@ -5,9 +7,9 @@ allprojects {
 }
 
 subprojects {
-    apply(plugin = "java")
+    plugins.apply("java")
 
-    java {
+    extensions.configure<JavaPluginExtension>("java") {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(21))
         }
