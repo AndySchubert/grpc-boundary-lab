@@ -1,4 +1,5 @@
-.PHONY: help build clean backend gateway loadgen loadgen-2k loadgen-gw loadgen-backend
+.PHONY: help build clean test backend gateway loadgen loadgen-2k loadgen-gw loadgen-backend
+
 
 # ---- Loadgen defaults ----
 REQUESTS ?= 50000
@@ -43,6 +44,9 @@ build:
 
 clean:
 	./gradlew clean
+
+test:
+	./gradlew test
 
 backend:
 	BACKEND_PORT=$(BACKEND_PORT) ./gradlew :backend:run

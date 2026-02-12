@@ -2,22 +2,25 @@ package lab.backend;
 
 import io.grpc.Server;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
-import io.grpc.stub.StreamObserver;
-import lab.grpc.PingRequest;
-import lab.grpc.PingResponse;
-import lab.grpc.PingServiceGrpc;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public final class BackendMain {
     public static void main(String[] args) throws IOException, InterruptedException {
         int port = Integer.parseInt(System.getenv().getOrDefault("BACKEND_PORT", "50051"));
+        int threads = Integer.parseInt(System.getenv().getOrDefault("BACKEND_THREADS", "0"));
 
-        Server server = NettyServerBuilder.forPort(port)
-                .addService(new PingServiceImpl())
-                .build()
-                .start();
+        NettyServerBuilder builder = NettyServerBuilder.forPort(port)
+                .addService(new PingServiceImpl());
+
+        if (threads > 0) {
+            System.out.println("Using fixed thread pool for backend: " + threads);
+            builder.executor(Executors.newFixedThreadPool(threads));
+        }
+
+        Server server = builder.build().start();
 
         System.out.println("backend listening on :" + port);
 
@@ -31,14 +34,5 @@ public final class BackendMain {
 
         server.awaitTermination();
     }
-
-    static final class PingServiceImpl extends PingServiceGrpc.PingServiceImplBase {
-        @Override
-        public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver) {
-            String msg = request.getMessage();
-            PingResponse resp = PingResponse.newBuilder().setMessage("pong: " + msg).build();
-            responseObserver.onNext(resp);
-            responseObserver.onCompleted();
-        }
-    }
 }
+
