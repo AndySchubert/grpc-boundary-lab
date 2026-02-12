@@ -8,82 +8,78 @@ This project measures:
 - Tail latency amplification (p95 / p99)
 - Saturation behavior under load
 
-The system consists of:
-
-- Backend (port 50051)
-- Gateway (port 50052 → forwards to backend)
-- Load Generator with configurable concurrency, warmup, deadlines, and multi-run sweeps
+**Live Documentation:** [https://AndySchubert.github.io/grpc-boundary-lab/](https://AndySchubert.github.io/grpc-boundary-lab/)
 
 ---
 
 ## Architecture
 
-Client → Backend
+**Client** → **Backend**  
+**Client** → **Gateway (Async)** → **Backend**
 
-Client → Gateway → Backend
-
-The gateway introduces an additional network hop, serialization cycle, and scheduling layer.  
-This lab quantifies the overhead.
+The **Gateway** is implemented using asynchronous gRPC stubs to minimize overhead and prevent thread starvation. This lab quantifies the cost of this additional hop, including serialization, network, and scheduling overhead.
 
 ---
 
 ## Quick Start
 
-Start backend:
+1. **Build all modules:**
+   ```bash
+   make build
+   ```
 
+2. **Run tests:**
+   ```bash
+   make test
+   ```
+
+3. **Start backend:**
+   ```bash
+   make backend
+   ```
+
+4. **Start gateway:**
+   ```bash
+   make gateway
+   ```
+
+5. **Run load sweep (automated):**
+   ```bash
+   make sweep REQUESTS=50000 CONCURRENCY="1 16 64"
+   ```
+
+---
+
+## Performance Tuning
+
+Both the backend and gateway support thread pool tuning via environment variables:
+
+- `BACKEND_THREADS`: fixed thread pool size for the backend server.
+- `GATEWAY_SERVER_THREADS`: thread pool size for the gateway's ingress server.
+- `GATEWAY_CLIENT_THREADS`: thread pool size for the gateway's outbound client channel.
+
+Examples:
 ```bash
-make backend
-```
-
-Start gateway:
-
-```bash
-make gateway
-```
-
-Run load against backend:
-
-```bash
-make loadgen-backend
-```
-
-Run full sweep:
-
-```bash
-make sweep RUNS=5
+BACKEND_THREADS=64 make backend
+GATEWAY_SERVER_THREADS=64 GATEWAY_CLIENT_THREADS=64 make gateway
 ```
 
 ---
 
 ## Documentation
 
-Full documentation (architecture, experiments, analysis) is available via MkDocs:
+Full documentation including detailed architecture diagrams and analysis is available via MkDocs:
 
-```bash
-make docs
-```
-
----
-
-## Goals
-
-This lab aims to provide a reproducible framework for analyzing:
-
-- Boundary overhead in microservice architectures
-- Forwarding bottlenecks
-- Tail latency amplification under concurrency
-- Saturation characteristics
+- **Online:** [Live Link](https://AndySchubert.github.io/grpc-boundary-lab/)
+- **Local:** `make docs`
 
 ---
 
 ## Status
 
-Current version includes:
+- ✅ **Asynchronous Gateway**: High-throughput forwarding.
+- ✅ **Tunable Threading**: Optimize for specific hardware.
+- ✅ **Automated Load Generator**: Percentile latency (HdrHistogram).
+- ✅ **Integration Tests**: Automated verification via `make test` and CI.
+- ✅ **CI/CD**: Automated testing and documentation deployment.
 
-- Concurrency-controlled load generator
-- Warmup phase
-- Deadline configuration
-- Percentile latency reporting (HdrHistogram)
-- Multi-run stability mode
-- Automated sweep target
-- MkDocs documentation with Mermaid diagrams
