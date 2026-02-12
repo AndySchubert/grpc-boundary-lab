@@ -75,3 +75,14 @@ sweep:
 	  echo "==================== GATEWAY   CONCURRENCY=$$c ===================="; \
 	  $(MAKE) --no-print-directory loadgen-gw CONCURRENCY=$$c; \
 	done
+
+.PHONY: docs docs-build docs-deploy
+
+docs:
+	poetry run mkdocs serve
+
+docs-build:
+	poetry run mkdocs build
+
+docs-deploy:
+	poetry run mkdocs gh-deploy
