@@ -1,4 +1,5 @@
-.PHONY: help build clean backend loadgen loadgen-2k fmt
+.PHONY: help build clean backend gateway loadgen loadgen-2k loadgen-gw loadgen-backend
+
 
 help:
 	@echo "Targets:"
@@ -28,4 +29,16 @@ loadgen:
 
 loadgen-2k:
 	REQUESTS=2000 BACKEND_HOST=$${BACKEND_HOST:-127.0.0.1} BACKEND_PORT=$${BACKEND_PORT:-50051} \
+	./gradlew :loadgen:run
+
+gateway:
+	GATEWAY_PORT=$${GATEWAY_PORT:-50052} BACKEND_HOST=$${BACKEND_HOST:-127.0.0.1} BACKEND_PORT=$${BACKEND_PORT:-50051} \
+	./gradlew :gateway:run
+
+loadgen-gw:
+	REQUESTS=$${REQUESTS:-200} TARGET_HOST=$${TARGET_HOST:-127.0.0.1} TARGET_PORT=$${TARGET_PORT:-50052} \
+	./gradlew :loadgen:run
+
+loadgen-backend:
+	REQUESTS=$${REQUESTS:-200} TARGET_HOST=$${TARGET_HOST:-127.0.0.1} TARGET_PORT=$${TARGET_PORT:-50051} \
 	./gradlew :loadgen:run

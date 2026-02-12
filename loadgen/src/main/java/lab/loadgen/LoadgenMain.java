@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public final class LoadgenMain {
     public static void main(String[] args) throws Exception {
         String host = System.getenv().getOrDefault("BACKEND_HOST", "127.0.0.1");
-        int port = Integer.parseInt(System.getenv().getOrDefault("BACKEND_PORT", "50051"));
+        int port = Integer.parseInt(System.getenv().getOrDefault("BACKEND_PORT", "50052"));
         int n = Integer.parseInt(System.getenv().getOrDefault("REQUESTS", "100"));
 
         ManagedChannel ch = NettyChannelBuilder.forAddress(host, port)
