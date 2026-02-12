@@ -14,6 +14,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install poetry
-      - run: poetry install --with dev,docs
+      - run: poetry install --with dev,docs --no-root
       - run: poetry run mkdocs gh-deploy --force
 
