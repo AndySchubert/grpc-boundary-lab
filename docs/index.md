@@ -24,18 +24,26 @@ The goal is to quantify:
 
 ## Quick Start
 
-Start backend:
+### Start backend
 
+```bash
 make backend
+```
 
-Start gateway:
+### Start gateway
 
+```bash
 make gateway
+```
 
-Run load against backend:
+### Run load against backend
 
+```bash
 make loadgen-backend
+```
 
-Run full sweep:
+### Run full sweep
 
+```bash
 make sweep RUNS=5
+```

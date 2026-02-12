@@ -11,7 +11,7 @@ theme:
     - navigation.tracking
     - content.code.copy
     - content.tabs.link
-    - toc.integrate
+    # - toc.integrate
   palette:
     - scheme: default
       primary: indigo
