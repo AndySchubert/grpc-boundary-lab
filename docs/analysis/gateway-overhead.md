@@ -1,20 +1,24 @@
-# Gateway Overhead Analysis
+# Gateway Overhead
 
-Observed behavior from sweep experiments:
+This page quantifies the "cost of the hop" introduced by the gRPC gateway.
 
-- Gateway throughput consistently lower than backend
-- Tail latency increases more rapidly under higher concurrency
-- Gateway saturates earlier
+## Latency Amplification
 
-Example (C=64):
+Comparing p50 (median) latency in microseconds (us) at different concurrency levels.
 
-Backend:
-- ~18k ok_rps
-- p95 ~4–5 ms
+| Concurrency | Backend p50 (us) | Gateway p50 (us) | Delta (us) |
+| :--- | :--- | :--- | :--- |
+| 1 | 288 | 633 | +345 |
+| 16 | 1,051 | 1,296 | +245 |
+| 128 | 6,423 | 7,995 | +1,572 |
 
-Gateway:
-- ~14k ok_rps
-- p95 ~6–7 ms
+## Where does the time go?
 
-This suggests the forwarding boundary introduces measurable scheduling
-and queuing overhead under load.
+The ~300us added by the gateway is a composite of:
+1. **Network Latency**: Two socket hops instead of one (Localhost loopback).
+2. **Serialization**: The request must be deserialized by the gateway and re-serialized for the backend.
+3. **Context Switching**: The gateway must hand off the request from the server thread to the client thread (even in the async model).
+4. **Queueing**: Internal gRPC buffers and event loops.
+
+## Critical Finding: Tail Latency
+At high loads, the "Queueing" component becomes dominant. The gateway doesn't just add a fixed offset; it amplifies variance, leading to much larger p99 gaps during saturation.

@@ -1,21 +1,25 @@
 # Load Generator
 
-The load generator supports the following environment variables:
+The load generator is a high-performance Java client designed to saturate the system and measure stable state performance.
 
-REQUESTS     (default 50000)   - Measured requests
-WARMUP       (default 2000)    - Warmup requests (not measured)
-CONCURRENCY  (default 32)      - Worker threads
-DEADLINE_MS  (default 20000)   - Per-RPC deadline
-RUNS         (default 1)       - Number of repeated measured runs
+## Design
 
----
+- **Thread-Per-Request**: Uses a fixed thread pool to maintain a constant number of concurrent "blocking" clients.
+- **Synchronous Stubs**: Simplifies the logic for measuring end-to-end latency from the client's perspective.
+- **HdrHistogram**: Uses a High Dynamic Range Histogram to capture latency percentiles (p50, p95, p99, p99.9) with high precision and low overhead.
 
-Output Format
+## Metrics Reported
 
-run,attempted,ok,errors,concurrency,seconds,ok_rps,p50_us,p95_us,p99_us,max_us
+| Metric | Description |
+| :--- | :--- |
+| **ok_rps** | Successful requests per second. |
+| **p50_us** | Median latency in microseconds. |
+| **p99_us** | Tail latency (99th percentile) in microseconds. |
+| **errors** | Number of failed requests (e.g., Deadline Exceeded). |
 
-Key Metrics
+## Usage
 
-ok_rps  → successful requests per second
-p95_us  → 95th percentile latency
-p99_us  → 99th percentile latency
+The generator is typically run via the root `Makefile`:
+```bash
+make sweep REQUESTS=50000 CONCURRENCY="1 8 16"
+```
