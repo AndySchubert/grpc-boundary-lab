@@ -14,11 +14,19 @@ Comparing p50 (median) latency in microseconds (us) at different concurrency lev
 
 ## Where does the time go?
 
-The ~300us added by the gateway is a composite of:
-1. **Network Latency**: Two socket hops instead of one (Localhost loopback).
-2. **Serialization**: The request must be deserialized by the gateway and re-serialized for the backend.
-3. **Context Switching**: The gateway must hand off the request from the server thread to the client thread (even in the async model).
-4. **Queueing**: Internal gRPC buffers and event loops.
+The ~300µs added by the gateway is a composite of:
+
+1. **Network Latency**  
+   Two socket hops instead of one (localhost loopback).
+
+2. **Serialization**  
+   The request must be deserialized by the gateway and re-serialized for the backend.
+
+3. **Context Switching**  
+   The gateway must hand off the request from the server thread to the client thread (even in the async model).
+
+4. **Queueing**  
+   Internal gRPC buffers and event loops.
 
 ## Critical Finding: Tail Latency
 At high loads, the "Queueing" component becomes dominant. The gateway doesn't just add a fixed offset; it amplifies variance, leading to much larger p99 gaps during saturation.
