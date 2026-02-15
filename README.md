@@ -14,10 +14,33 @@ This project measures:
 
 ## Architecture
 
-**Client** → **Backend**  
-**Client** → **Gateway (Async)** → **Backend**
+```mermaid
+graph LR
+    A[Client] --> B[Gateway (Async)]
+    B --> C[Backend]
+    A -->|Baseline| C
+```
 
 The **Gateway** is implemented using asynchronous gRPC stubs to minimize overhead and prevent thread starvation. This lab quantifies the cost of this additional hop, including serialization, network, and scheduling overhead.
+
+---
+
+## Prerequisites
+- **Java**: 17+ (for Backend/Gateway)
+- **Gradle**: For building the Java modules
+- **Python**: 3.12 (for Loadgen and Documentation)
+- **Poetry**: To manage Python dependencies
+- **Make**: For automated builds and load sweeps
+
+## Installation & Setup
+1. **Build all modules**:
+   ```bash
+   make build
+   ```
+2. **Setup Loadgen (Python)**:
+   ```bash
+   poetry install
+   ```
 
 ---
 
