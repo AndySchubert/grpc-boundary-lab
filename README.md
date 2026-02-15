@@ -16,7 +16,7 @@ This project measures:
 
 ```mermaid
 graph LR
-    A[Client] --> B[Gateway (Async)]
+    A[Client] --> B["Gateway (Async)"]
     B --> C[Backend]
     A -->|Baseline| C
 ```
