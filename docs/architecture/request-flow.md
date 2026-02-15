@@ -20,9 +20,10 @@ sequenceDiagram
 
 ## Async Forwarding Logic
 
-The Gateway uses `StreamObserver` to proxy the request. Crucially, it does **not** block a thread waiting for the backend response. Instead:
-1. It receives the request.
-2. It initiates an asynchronous call to the backend.
-3. It provides a callback that forwards the result to the original client when it arrives.
+The Gateway uses `StreamObserver` to proxy requests. Crucially, it does **not** block a thread while waiting for the backend response. Instead:
 
-This allows the Gateway to handle thousands of concurrent requests with a small, fixed thread pool.
+1. Receive the incoming request.
+2. Initiate an asynchronous call to the backend.
+3. Register a callback that forwards the result to the original client once available.
+
+This design allows the Gateway to handle thousands of concurrent requests using a small, fixed-size thread pool.
