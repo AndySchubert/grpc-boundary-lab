@@ -1,49 +1,42 @@
 site_name: grpc-boundary-lab
 site_description: Exploring gRPC boundary overhead with a backend, gateway, and configurable load generator
-repo_name: AndySchubert/grpc-boundary-lab
+site_author: Andy Schubert
+
 repo_url: https://github.com/AndySchubert/grpc-boundary-lab
+repo_name: AndySchubert/grpc-boundary-lab
 
 theme:
   name: material
   features:
-    - navigation.instant
+    - navigation.tabs
     - navigation.sections
-    - navigation.tracking
+    - navigation.top
     - content.code.copy
-    - content.tabs.link
-    # - toc.integrate
-  palette:
-    - scheme: default
-      primary: indigo
-      accent: indigo
-    - scheme: slate
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
-
-nav:
-  - Overview: index.md
-
-  - Architecture:
-      - System Overview: architecture/system.md
-      - Request Flow: architecture/request-flow.md
-
-  - Experiments:
-      - Load Generator: experiments/loadgen.md
-      - Sweeps: experiments/sweeps.md
-      - Deadlines & Errors: experiments/deadlines.md
-
-  - Analysis:
-      - Scaling Behavior: analysis/scaling.md
-      - Gateway Overhead: analysis/gateway-overhead.md
-
-  - Future Work: future.md
+    - search.highlight
+    - search.suggest
 
 markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.details
+  - pymdownx.highlight
+
+nav:
+  - Overview: index.md
+  - Architecture:
+      - System Overview: architecture/system.md
+      - Request Flow: architecture/request-flow.md
+  - Experiments:
+      - Load Generator: experiments/loadgen.md
+      - Sweeps: experiments/sweeps.md
+      - Deadlines & Errors: experiments/deadlines.md
+  - Analysis:
+      - Scaling Behavior: analysis/scaling.md
+      - Gateway Overhead: analysis/gateway-overhead.md
+  - Future Work: future.md
