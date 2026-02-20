@@ -17,14 +17,18 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install poetry
-      - run: poetry install --with dev,docs --no-root
-      - run: poetry run mkdocs build
+      - name: Install dependencies
+        working-directory: docs
+        run: poetry install --with dev,docs --no-root
+      - name: Build docs
+        working-directory: docs
+        run: poetry run mkdocs build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'site'
+          path: 'docs/site'
 
   deploy:
     environment:

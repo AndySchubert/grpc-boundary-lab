@@ -83,10 +83,10 @@ sweep:
 .PHONY: docs docs-build docs-deploy
 
 docs:
-	poetry run mkdocs serve
+	cd docs && poetry run mkdocs serve
 
 docs-build:
-	poetry run mkdocs build
+	cd docs && poetry run mkdocs build
 
 docs-deploy:
-	poetry run mkdocs gh-deploy
+	cd docs && poetry run mkdocs gh-deploy
