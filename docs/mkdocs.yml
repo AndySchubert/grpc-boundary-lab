@@ -5,6 +5,8 @@ site_author: Andy Schubert
 repo_url: https://github.com/AndySchubert/grpc-boundary-lab
 repo_name: AndySchubert/grpc-boundary-lab
 
+docs_dir: src
+
 theme:
   name: material
   features:
