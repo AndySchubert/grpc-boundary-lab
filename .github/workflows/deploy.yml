@@ -37,11 +37,11 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        working-directory: terraform
+        working-directory: deploy/terraform
         run: terraform init
 
       - name: Terraform Apply (create/update Artifact Registry)
-        working-directory: terraform
+        working-directory: deploy/terraform
         run: |
           terraform apply -auto-approve -target=google_artifact_registry_repository.repo \
             -var="project_id=${{ env.PROJECT_ID }}" \
@@ -63,16 +63,16 @@ jobs:
 
       - name: Build and Push Backend Image
         run: |
-          docker build -t "${{ env.BACKEND_IMAGE }}" -f backend/Dockerfile .
+          docker build -t "${{ env.BACKEND_IMAGE }}" -f src/backend/Dockerfile .
           docker push "${{ env.BACKEND_IMAGE }}"
 
       - name: Build and Push Gateway Image
         run: |
-          docker build -t "${{ env.GATEWAY_IMAGE }}" -f gateway/Dockerfile .
+          docker build -t "${{ env.GATEWAY_IMAGE }}" -f src/gateway/Dockerfile .
           docker push "${{ env.GATEWAY_IMAGE }}"
 
       - name: Terraform Apply (deploy new image tags)
-        working-directory: terraform
+        working-directory: deploy/terraform
         run: |
           terraform apply -auto-approve \
             -var="project_id=${{ env.PROJECT_ID }}" \
@@ -82,5 +82,5 @@ jobs:
             -var="image_tag_gateway=${{ github.sha }}"
 
       - name: Output Cloud Run URL
-        working-directory: terraform
+        working-directory: deploy/terraform
         run: echo "Deployed to $(terraform output -raw cloud_run_url)"
