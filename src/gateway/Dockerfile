@@ -5,6 +5,6 @@ RUN ./gradlew :gateway:installDist
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=builder /app/gateway/build/install/gateway /app/
+COPY --from=builder /app/src/gateway/build/install/gateway /app/
 EXPOSE 50052
 ENTRYPOINT ["/app/bin/gateway"]
