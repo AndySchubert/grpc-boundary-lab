@@ -1,4 +1,5 @@
 site_name: grpc-boundary-lab
+site_url: https://AndySchubert.github.io/grpc-boundary-lab/
 site_description: Exploring gRPC boundary overhead with a backend, gateway, and configurable load generator
 site_author: Andy Schubert
 
